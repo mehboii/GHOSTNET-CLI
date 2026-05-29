@@ -12,7 +12,7 @@ same audited SDK that powers GhostNet apps.
 ║        N 1 1 X   C O L L E C T I V E           ║
 ║         · G H O S T N E T   C L I ·            ║
 ╚═══════════════════════════════════════════════╝
-👻 Welcome, <you>!
+ Welcome, <you>!
 ```
 
 ## Install (npm)
