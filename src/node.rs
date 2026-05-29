@@ -70,21 +70,41 @@ fn require_ready() -> Result<PathBuf> {
     Ok(script)
 }
 
-/// Run a one-shot bridge command and return its raw process output.
-pub fn run_bridge(args: &[String]) -> Result<Output> {
+/// Resolve a seed phrase from an explicit value, falling back to the
+/// `GHOSTNET_SEED` environment variable. Lets callers keep the secret out of
+/// the command line (and shell history) entirely.
+pub fn resolve_seed(explicit: Option<String>) -> Option<String> {
+    explicit.or_else(|| {
+        std::env::var("GHOSTNET_SEED")
+            .ok()
+            .filter(|s| !s.trim().is_empty())
+    })
+}
+
+/// Build the `node <bridge> <args…>` command. A seed, if present, is passed via
+/// the child's environment — never as a process argument — so it is not exposed
+/// in `ps` / `/proc/<pid>/cmdline` / Task Manager to other local processes.
+pub fn build_command(args: &[String], seed: Option<&str>) -> Result<Command> {
     let script = require_ready()?;
     let dir = bridge_dir()?;
-    Command::new(node_bin())
-        .arg(&script)
-        .args(args)
-        .current_dir(&dir)
+    let mut cmd = Command::new(node_bin());
+    cmd.arg(&script).args(args).current_dir(&dir);
+    if let Some(seed) = seed {
+        cmd.env("GHOSTNET_SEED", seed);
+    }
+    Ok(cmd)
+}
+
+/// Run a one-shot bridge command and return its raw process output.
+pub fn run_bridge(args: &[String], seed: Option<&str>) -> Result<Output> {
+    build_command(args, seed)?
         .output()
         .context("failed to launch Node.js — is it installed and on your PATH?")
 }
 
 /// Run a one-shot bridge command and parse the last NDJSON line it emitted.
-pub fn run_bridge_json(args: &[String]) -> Result<Value> {
-    let output = run_bridge(args)?;
+pub fn run_bridge_json(args: &[String], seed: Option<&str>) -> Result<Value> {
+    let output = run_bridge(args, seed)?;
     parse_last_json(&output)
 }
 

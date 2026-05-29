@@ -6,12 +6,22 @@ use crate::cli::IdentityAction;
 use crate::node;
 
 pub fn run(action: IdentityAction) -> Result<()> {
-    let args: Vec<String> = match &action {
-        IdentityAction::Create => vec!["identity-create".to_string()],
-        IdentityAction::Load { seed } => vec!["identity-load".to_string(), seed.clone()],
+    // For `load`, the seed is passed to the child via env (not argv).
+    let (args, seed): (Vec<String>, Option<String>) = match &action {
+        IdentityAction::Create => (vec!["identity-create".to_string()], None),
+        IdentityAction::Load { seed } => (
+            vec!["identity-load".to_string()],
+            node::resolve_seed(seed.clone()),
+        ),
     };
 
-    let resp = node::run_bridge_json(&args)?;
+    if matches!(action, IdentityAction::Load { .. }) && seed.is_none() {
+        return Err(anyhow::anyhow!(
+            "a 12-word seed phrase is required (pass it as an argument or set GHOSTNET_SEED)"
+        ));
+    }
+
+    let resp = node::run_bridge_json(&args, seed.as_deref())?;
     let node_id = field(&resp, "nodeId");
 
     match action {

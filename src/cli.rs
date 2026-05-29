@@ -40,7 +40,8 @@ pub enum Commands {
         /// Message text (max 64 KB).
         message: String,
 
-        /// Restore an identity from a 12-word seed phrase (otherwise a fresh one is used).
+        /// Seed phrase to restore an identity (otherwise a fresh one is used).
+        /// Prefer the GHOSTNET_SEED env var to keep it out of shell history.
         #[arg(long)]
         seed: Option<String>,
 
@@ -51,7 +52,8 @@ pub enum Commands {
 
     /// Connect to the mesh and stream incoming messages.
     Listen {
-        /// Restore an identity from a 12-word seed phrase (otherwise a fresh one is used).
+        /// Seed phrase to restore an identity (otherwise a fresh one is used).
+        /// Prefer the GHOSTNET_SEED env var to keep it out of shell history.
         #[arg(long)]
         seed: Option<String>,
 
@@ -67,8 +69,11 @@ pub enum IdentityAction {
     Create,
 
     /// Restore an identity from a 12-word seed phrase.
+    ///
+    /// Tip: set the GHOSTNET_SEED environment variable instead of passing the
+    /// phrase as an argument, to keep it out of shell history and process lists.
     Load {
-        /// The 12-word seed phrase (quote it).
-        seed: String,
+        /// The 12-word seed phrase (quote it). Omit to read from GHOSTNET_SEED.
+        seed: Option<String>,
     },
 }

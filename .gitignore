@@ -5,3 +5,6 @@ Cargo.lock
 
 # Node bridge (installed into ~/.ghostnet-cli at runtime, but ignore local copies too)
 node_modules/
+
+# Binary downloaded by the npm postinstall (created at install time)
+scripts/bin/

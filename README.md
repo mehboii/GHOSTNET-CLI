@@ -55,10 +55,11 @@ ghostnet identity create
 ghostnet identity load "word1 word2 ... word12"
 
 # 4. Send an encrypted message to a peer
-ghostnet send 0x<peer-node-id> "hello from the mesh!" --seed "your twelve words ..."
+#    (prefer GHOSTNET_SEED over --seed to keep the phrase out of shell history)
+GHOSTNET_SEED="your twelve words ..." ghostnet send 0x<peer-node-id> "hello from the mesh!"
 
 # 5. Listen for incoming messages
-ghostnet listen --seed "your twelve words ..."
+GHOSTNET_SEED="your twelve words ..." ghostnet listen
 ```
 
 `ghostnet info` shows the CLI version, SDK package, and whether the bridge is
@@ -82,10 +83,27 @@ command then spawns Node against that bridge and exchanges newline-delimited JSO
 
 ### Environment overrides
 
-| Variable         | Purpose                                  |
-| ---------------- | ---------------------------------------- |
-| `GHOSTNET_NODE`  | Path to the `node` executable            |
-| `GHOSTNET_NPM`   | Path to the `npm` executable             |
+| Variable         | Purpose                                                        |
+| ---------------- | -------------------------------------------------------------- |
+| `GHOSTNET_SEED`  | Seed phrase, kept out of argv/shell history (preferred)        |
+| `GHOSTNET_NODE`  | Path to the `node` executable                                  |
+| `GHOSTNET_NPM`   | Path to the `npm` executable                                   |
+
+## Security
+
+- **Verified binaries.** The npm postinstall downloads the platform binary over
+  HTTPS (GitHub hosts only) and verifies its **SHA-256 against `checksums.json`
+  shipped inside the npm package** before installing. A tampered release, CDN, or
+  man-in-the-middle is rejected — the binary is never executed. Downloads are
+  atomic (temp file + rename), size-capped, and follow a bounded number of
+  redirects.
+- **Secrets stay off the command line.** Seed phrases are passed to the Node
+  bridge via the environment, never as process arguments, so they don't leak
+  through `ps` / `/proc/<pid>/cmdline` / Task Manager. Use `GHOSTNET_SEED` to also
+  keep them out of shell history.
+- **Pinned CI.** The release workflow pins every GitHub Action to a commit SHA,
+  runs least-privilege (`contents: read`, write only on the publish job), and
+  does not persist credentials in the checkout.
 
 ## License
 

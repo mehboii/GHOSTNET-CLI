@@ -2,29 +2,22 @@ use anyhow::{anyhow, Context, Result};
 use colored::Colorize;
 use serde_json::Value;
 use std::io::{BufRead, BufReader};
-use std::process::{Command, Stdio};
+use std::process::Stdio;
 
 use crate::node;
 
 pub fn run(seed: Option<String>, endpoint: Option<String>) -> Result<()> {
-    if !node::bridge_installed() {
-        return Err(anyhow!(
-            "the GhostNet SDK isn't installed yet — run `ghostnet setup` first"
-        ));
-    }
-
-    let script = node::bridge_script()?;
-    let dir = node::bridge_dir()?;
-
-    let mut cmd = Command::new(node::node_bin());
-    cmd.arg(&script).arg("listen");
-    if let Some(seed) = seed {
-        cmd.arg("--seed").arg(seed);
-    }
+    let mut args = vec!["listen".to_string()];
     if let Some(endpoint) = endpoint {
-        cmd.arg("--endpoint").arg(endpoint);
+        args.push("--endpoint".to_string());
+        args.push(endpoint);
     }
-    cmd.current_dir(&dir).stdout(Stdio::piped());
+
+    // Seed (key material) is passed to the child via env, never argv.
+    let seed = node::resolve_seed(seed);
+
+    let mut cmd = node::build_command(&args, seed.as_deref())?;
+    cmd.stdout(Stdio::piped());
 
     let mut child = cmd
         .spawn()

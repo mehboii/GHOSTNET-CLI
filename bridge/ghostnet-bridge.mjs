@@ -37,6 +37,16 @@ for (let i = 0; i < rest.length; i++) {
   }
 }
 
+// Seed phrase is read from the environment (set by the Rust CLI) so it never
+// appears in this process's argv. Fall back to flags/positional for ad-hoc use.
+function seedPhrase(positionalIndex) {
+  return (
+    process.env.GHOSTNET_SEED ||
+    flags.seed ||
+    (positionalIndex != null ? positional[positionalIndex] : undefined)
+  );
+}
+
 function newClient() {
   // Passing `endpoint: undefined` falls back to the SDK default.
   return new GhostNet(flags.endpoint ? { endpoint: flags.endpoint } : {});
@@ -52,7 +62,7 @@ async function main() {
     }
 
     case 'identity-load': {
-      const seed = flags.seed ?? positional[0];
+      const seed = seedPhrase(0);
       if (!seed) fail('a 12-word seed phrase is required');
       const gn = newClient();
       const id = gn.loadIdentity(seed);
@@ -66,7 +76,8 @@ async function main() {
       if (!peer || !message) fail('usage: send <peerId> <message> [--seed <phrase>]');
 
       const gn = newClient();
-      const id = flags.seed ? gn.loadIdentity(flags.seed) : gn.createIdentity();
+      const seed = seedPhrase();
+      const id = seed ? gn.loadIdentity(seed) : gn.createIdentity();
       await gn.connect();
       await gn.send(peer, message);
       gn.disconnect();
@@ -76,7 +87,8 @@ async function main() {
 
     case 'listen': {
       const gn = newClient();
-      const id = flags.seed ? gn.loadIdentity(flags.seed) : gn.createIdentity();
+      const seed = seedPhrase();
+      const id = seed ? gn.loadIdentity(seed) : gn.createIdentity();
       emit({ ok: true, event: 'identity', nodeId: id.nodeId });
 
       gn.on('connect', () => emit({ ok: true, event: 'connect' }));
