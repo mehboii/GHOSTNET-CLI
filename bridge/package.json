@@ -1,0 +1,10 @@
+{
+  "name": "ghostnet-cli-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Node bridge that lets the GhostNet Rust CLI drive @n11x/ghostnet-sdk",
+  "dependencies": {
+    "@n11x/ghostnet-sdk": "latest"
+  }
+}
