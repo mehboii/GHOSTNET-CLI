@@ -15,7 +15,17 @@ same audited SDK that powers GhostNet apps.
 👻 Welcome, <you>!
 ```
 
-## Requirements
+## Install (npm)
+
+```bash
+npm install -g @n11x/ghostnet-cli
+```
+
+This downloads the prebuilt binary for your platform (Windows / macOS / Linux,
+x64 + arm64) from GitHub Releases and exposes the `ghostnet` command. Node.js 18+
+must be on your `PATH` at runtime (the CLI drives the SDK through it).
+
+## Requirements (building from source)
 
 - [Rust](https://rustup.rs) (1.74+) to build the binary
 - [Node.js](https://nodejs.org) 18+ on your `PATH` at runtime (the CLI shells out

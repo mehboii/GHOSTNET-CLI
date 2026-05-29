@@ -5,7 +5,7 @@ edition = "2021"
 description = "GhostNet CLI — encrypted mesh network client by the N11X Collective"
 license = "MIT"
 authors = ["N11X Collective"]
-repository = "https://github.com/n11x/ghostnet-cli"
+repository = "https://github.com/mehboii/GHOSTNET-CLI"
 readme = "README.md"
 
 [[bin]]

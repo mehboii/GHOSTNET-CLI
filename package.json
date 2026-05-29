@@ -1,0 +1,38 @@
+{
+  "name": "@n11x/ghostnet-cli",
+  "version": "0.1.0",
+  "description": "GhostNet CLI — encrypted mesh network client by the N11X Collective",
+  "license": "MIT",
+  "author": "N11X Collective",
+  "homepage": "https://github.com/mehboii/GHOSTNET-CLI#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mehboii/GHOSTNET-CLI.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mehboii/GHOSTNET-CLI/issues"
+  },
+  "keywords": [
+    "ghostnet",
+    "cli",
+    "mesh-network",
+    "encryption",
+    "privacy",
+    "p2p",
+    "n11x"
+  ],
+  "bin": {
+    "ghostnet": "scripts/run.js"
+  },
+  "scripts": {
+    "postinstall": "node scripts/install.js"
+  },
+  "files": [
+    "scripts/install.js",
+    "scripts/run.js",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
