@@ -12,16 +12,15 @@ pub fn run() {
     banner::print_banner();
     banner::welcome();
     println!(
-        "  Type {} for commands, {} to leave.",
-        "help".bold(),
-        "exit".bold()
+        "  {}",
+        "Type help for commands, exit to leave.".white()
     );
     println!();
 
     let stdin = io::stdin();
 
     loop {
-        print!("{} ", "ghostnet›".bright_magenta().bold());
+        print!("{} ", banner::brand("ghostnet›"));
         let _ = io::stdout().flush();
 
         let mut line = String::new();
@@ -44,7 +43,7 @@ pub fn run() {
         // Shell built-ins.
         match line {
             "exit" | "quit" | ":q" => {
-                println!("{}", "Leaving the mesh. Stay private. 👻".bright_black());
+                println!("{}", "Leaving the mesh. Stay private. 👻".white());
                 break;
             }
             "clear" | "cls" => {
