@@ -55,13 +55,22 @@ pub fn run() {
             _ => {}
         }
 
-        let tokens = match tokenize(line) {
+        let mut tokens = match tokenize(line) {
             Ok(tokens) => tokens,
             Err(err) => {
                 eprintln!("{} {}", "error:".red().bold(), err);
                 continue;
             }
         };
+
+        // Be forgiving if the user habitually types the full `ghostnet …`
+        // command inside the shell — drop a leading program name.
+        if tokens
+            .first()
+            .is_some_and(|t| t.eq_ignore_ascii_case("ghostnet"))
+        {
+            tokens.remove(0);
+        }
         if tokens.is_empty() {
             continue;
         }
@@ -99,11 +108,13 @@ fn tokenize(input: &str) -> Result<Vec<String>, String> {
 
     for ch in input.chars() {
         match ch {
-            '\'' if !in_double => {
+            // Straight or “smart” single quotes.
+            '\'' | '\u{2018}' | '\u{2019}' if !in_double => {
                 in_single = !in_single;
                 has_token = true;
             }
-            '"' if !in_single => {
+            // Straight or “smart” double quotes.
+            '"' | '\u{201C}' | '\u{201D}' if !in_single => {
                 in_double = !in_double;
                 has_token = true;
             }
