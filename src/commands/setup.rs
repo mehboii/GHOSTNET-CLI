@@ -2,10 +2,9 @@ use anyhow::{Context, Result};
 use colored::Colorize;
 use std::process::Command;
 
-use crate::{banner, node};
+use crate::node;
 
 pub fn run() -> Result<()> {
-    banner::print_banner();
     println!("{}", "Setting up the GhostNet SDK bridge…".bold());
     println!();
 

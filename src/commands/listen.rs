@@ -4,12 +4,9 @@ use serde_json::Value;
 use std::io::{BufRead, BufReader};
 use std::process::{Command, Stdio};
 
-use crate::{banner, node};
+use crate::node;
 
 pub fn run(seed: Option<String>, endpoint: Option<String>) -> Result<()> {
-    banner::print_banner();
-    banner::welcome();
-
     if !node::bridge_installed() {
         return Err(anyhow!(
             "the GhostNet SDK isn't installed yet — run `ghostnet setup` first"

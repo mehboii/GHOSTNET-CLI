@@ -3,12 +3,9 @@ use colored::Colorize;
 use serde_json::Value;
 
 use crate::cli::IdentityAction;
-use crate::{banner, node};
+use crate::node;
 
 pub fn run(action: IdentityAction) -> Result<()> {
-    banner::print_banner();
-    banner::welcome();
-
     let args: Vec<String> = match &action {
         IdentityAction::Create => vec!["identity-create".to_string()],
         IdentityAction::Load { seed } => vec!["identity-load".to_string(), seed.clone()],

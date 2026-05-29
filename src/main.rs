@@ -2,37 +2,56 @@ mod banner;
 mod cli;
 mod commands;
 mod node;
+mod repl;
 
 use clap::Parser;
-use cli::{Cli, Commands};
+use cli::Cli;
 use colored::Colorize;
 
 fn main() {
+    enable_ansi();
+
     let args = Cli::parse();
 
     if args.no_color {
         colored::control::set_override(false);
     }
 
-    let result = match args.command {
-        None => {
-            // Bare `ghostnet` — greet and point at the help.
+    match args.command {
+        // No subcommand → drop into the interactive GhostNet shell.
+        None => repl::run(),
+
+        // A subcommand was given → run it once and exit (good for scripting).
+        Some(command) => {
             banner::print_banner();
             banner::welcome();
-            println!("  Run {} to see everything this CLI can do.", "ghostnet --help".bold());
-            Ok(())
+            if let Err(err) = commands::dispatch(command) {
+                eprintln!("{} {}", "error:".red().bold(), err);
+                std::process::exit(1);
+            }
         }
-        Some(Commands::Info) => commands::info::run(),
-        Some(Commands::Setup) => commands::setup::run(),
-        Some(Commands::Identity { action }) => commands::identity::run(action),
-        Some(Commands::Send { peer, message, seed, endpoint }) => {
-            commands::send::run(peer, message, seed, endpoint)
-        }
-        Some(Commands::Listen { seed, endpoint }) => commands::listen::run(seed, endpoint),
-    };
-
-    if let Err(err) = result {
-        eprintln!("{} {}", "error:".red().bold(), err);
-        std::process::exit(1);
     }
 }
+
+/// Enable ANSI escape handling on legacy Windows consoles so colors render
+/// instead of printing raw `←[1;95m` sequences. No-op everywhere else.
+#[cfg(windows)]
+fn enable_ansi() {
+    use windows_sys::Win32::System::Console::{
+        GetConsoleMode, GetStdHandle, SetConsoleMode, ENABLE_VIRTUAL_TERMINAL_PROCESSING,
+        STD_OUTPUT_HANDLE,
+    };
+    unsafe {
+        let handle = GetStdHandle(STD_OUTPUT_HANDLE);
+        if handle.is_null() {
+            return;
+        }
+        let mut mode: u32 = 0;
+        if GetConsoleMode(handle, &mut mode) != 0 {
+            let _ = SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+        }
+    }
+}
+
+#[cfg(not(windows))]
+fn enable_ansi() {}

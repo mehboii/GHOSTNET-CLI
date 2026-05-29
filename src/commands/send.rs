@@ -1,7 +1,7 @@
 use anyhow::Result;
 use colored::Colorize;
 
-use crate::{banner, node};
+use crate::node;
 
 pub fn run(
     peer: String,
@@ -9,9 +9,6 @@ pub fn run(
     seed: Option<String>,
     endpoint: Option<String>,
 ) -> Result<()> {
-    banner::print_banner();
-    banner::welcome();
-
     let mut args = vec!["send".to_string(), peer.clone(), message];
     if let Some(seed) = seed {
         args.push("--seed".to_string());
