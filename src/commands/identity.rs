@@ -26,18 +26,18 @@ pub fn run(action: IdentityAction) -> Result<()> {
 
     match action {
         IdentityAction::Create => {
-            println!("{}", "New identity created 🔑".green().bold());
+            println!("{}", "New identity created".green().bold());
             kv("Node ID", &node_id.bright_cyan().to_string());
             kv("Seed phrase", &field(&resp, "seedPhrase").yellow().to_string());
             println!();
             println!(
                 "{}",
-                "  ⚠ Back up your seed phrase. Anyone who has it controls this identity."
+                "  Back up your seed phrase. Anyone who has it controls this identity."
                     .yellow()
             );
         }
         IdentityAction::Load { .. } => {
-            println!("{}", "Identity restored ✓".green().bold());
+            println!("{}", "Identity restored".green().bold());
             kv("Node ID", &node_id.bright_cyan().to_string());
         }
     }

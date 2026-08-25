@@ -9,7 +9,7 @@ pub fn run() -> Result<()> {
     println!();
 
     let dir = node::ensure_bridge_files()?;
-    println!("  {} bridge files → {}", "✓".green(), dir.display().to_string().bright_black());
+    println!("  bridge files → {}", dir.display().to_string().bright_black());
 
     println!(
         "  {} running {}",
@@ -29,7 +29,7 @@ pub fn run() -> Result<()> {
     }
 
     println!();
-    println!("{}", "✓ GhostNet SDK installed. You're ready to go.".green().bold());
+    println!("{}", "GhostNet SDK installed. You're ready to go.".green().bold());
     println!("  Next: {}", "ghostnet identity create".bold());
     Ok(())
 }

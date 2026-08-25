@@ -43,7 +43,7 @@ pub fn run() {
         // Shell built-ins.
         match line {
             "exit" | "quit" | ":q" => {
-                println!("{}", "Leaving the mesh. Stay private. 👻".white());
+                println!("{}", "Leaving the mesh. Stay private.".white());
                 break;
             }
             "clear" | "cls" => {
