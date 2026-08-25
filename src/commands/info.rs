@@ -12,7 +12,7 @@ pub fn run() -> Result<()> {
     println!();
 
     let bridge_status = if node::bridge_installed() {
-        "installed ✓".green().to_string()
+        "installed".green().to_string()
     } else {
         "not installed — run `ghostnet setup`".yellow().to_string()
     };

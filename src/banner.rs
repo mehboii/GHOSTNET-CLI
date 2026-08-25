@@ -26,7 +26,7 @@ pub fn welcome() {
     let user = current_user();
     println!(
         "{} {}{}",
-        "👻 Welcome,".white().bold(),
+        "Welcome,".white().bold(),
         user.white().bold(),
         "!".white().bold()
     );

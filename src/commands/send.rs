@@ -22,6 +22,6 @@ pub fn run(
 
     node::run_bridge_json(&args, seed.as_deref())?;
 
-    println!("{}", "✓ Message sent.".green().bold());
+    println!("{}", "Message sent.".green().bold());
     Ok(())
 }
