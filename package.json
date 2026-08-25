@@ -25,6 +25,7 @@
     "ghostnet": "scripts/run.js"
   },
   "scripts": {
+    "build": "cargo build --release",
     "postinstall": "node scripts/install.js"
   },
   "files": [
