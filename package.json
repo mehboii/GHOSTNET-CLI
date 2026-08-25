@@ -26,6 +26,7 @@
   },
   "scripts": {
     "build": "cargo build --release",
+    "test": "cargo test",
     "postinstall": "node scripts/install.js"
   },
   "files": [
