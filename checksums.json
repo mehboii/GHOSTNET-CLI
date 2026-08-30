@@ -1,7 +1,7 @@
 {
-  "ghostnet-win32-x64.exe": "60161d9b8258e09dc3f6c4cce74766ce9a864d01e937695769cf2f0b1edcff94",
-  "ghostnet-linux-x64": "c06264273f0371d49cac8f1426d5716240552294f97b4807cc30f2a6f233fdaf",
-  "ghostnet-linux-arm64": "1afd620f282b531da5815af64a55aa60333ea689fa1617d90e6537d4ca065cf8",
-  "ghostnet-darwin-x64": "f4494a1d9a069609bc1c9997d26cdb760bf351845322849190d41a91649f2591",
-  "ghostnet-darwin-arm64": "644160b38a9eb7fdc64ec96dbf2be26516e383f5b1ab5790dba53df4e4d8f55a"
+  "ghostnet-win32-x64.exe": "a319221b48c3fb4275459a688802de116ba36c45461e6c48fe07f4acd2332a2a",
+  "ghostnet-linux-x64": "24335e5806a960bc6badc7cae71cad738bcf7ce1751d32fd32efe7cf3c25ad6c",
+  "ghostnet-linux-arm64": "42eedbc334dd5e828d67eca99629fec738acb5bcfaf3569c05cb8cc39a53db2b",
+  "ghostnet-darwin-x64": "9dd08b200742f1ec66f96d1576b629cda67b97e16d4d24822263142af6d067c9",
+  "ghostnet-darwin-arm64": "fa9520bd235b3408451a78f189a398dfdb1eec3ad75d34a4afa9e724e7a3500a"
 }
