@@ -1,6 +1,6 @@
 {
   "name": "@n11x/ghostnet-cli",
-  "version": "0.2.8",
+  "version": "0.2.10",
   "description": "GhostNet CLI — encrypted mesh network client by the N11X Collective",
   "license": "MIT",
   "author": "N11X Collective",
