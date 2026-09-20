@@ -1,6 +1,8 @@
 mod banner;
 mod cli;
 mod commands;
+mod config;
+mod history;
 mod node;
 mod repl;
 

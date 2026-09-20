@@ -55,7 +55,7 @@ ghostnet identity create
 ghostnet identity load "word1 word2 ... word12"
 
 # 4. Send an encrypted message to a peer
-#    (prefer GHOSTNET_SEED over --seed to keep the phrase out of shell history)
+#    (GHOSTNET_SEED is required; it avoids shell-history and argv exposure)
 GHOSTNET_SEED="your twelve words ..." ghostnet send 0x<peer-node-id> "hello from the mesh!"
 
 # 5. Listen for incoming messages
@@ -85,7 +85,7 @@ command then spawns Node against that bridge and exchanges newline-delimited JSO
 
 | Variable         | Purpose                                                        |
 | ---------------- | -------------------------------------------------------------- |
-| `GHOSTNET_SEED`  | Seed phrase, kept out of argv/shell history (preferred)        |
+| `GHOSTNET_SEED`  | Seed phrase, kept out of argv/shell history (required for send/listen) |
 | `GHOSTNET_NODE`  | Path to the `node` executable                                  |
 | `GHOSTNET_NPM`   | Path to the `npm` executable                                   |
 
@@ -101,6 +101,9 @@ command then spawns Node against that bridge and exchanges newline-delimited JSO
   bridge via the environment, never as process arguments, so they don't leak
   through `ps` / `/proc/<pid>/cmdline` / Task Manager. Use `GHOSTNET_SEED` to also
   keep them out of shell history.
+- **No accidental throwaway identities.** `send` and `listen` require a seed;
+  the CLI refuses to create an ephemeral identity that peers cannot reliably
+  contact later. The documented 64 KiB UTF-8 message limit is enforced locally.
 - **Pinned CI.** The release workflow pins every GitHub Action to a commit SHA,
   runs least-privilege (`contents: read`, write only on the publish job), and
   does not persist credentials in the checkout.
