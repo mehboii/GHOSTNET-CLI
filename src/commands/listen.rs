@@ -4,17 +4,19 @@ use serde_json::Value;
 use std::io::{BufRead, BufReader};
 use std::process::Stdio;
 
-use crate::node;
+use crate::{config, history, node};
 
 pub fn run(seed: Option<String>, endpoint: Option<String>) -> Result<()> {
+    let seed = node::resolve_seed(seed);
+    if seed.is_none() {
+        anyhow::bail!("an identity is required: set GHOSTNET_SEED or pass --seed; refusing to listen as an unreachable temporary identity");
+    }
+    let endpoint = config::endpoint(endpoint)?;
     let mut args = vec!["listen".to_string()];
     if let Some(endpoint) = endpoint {
         args.push("--endpoint".to_string());
         args.push(endpoint);
     }
-
-    // Seed (key material) is passed to the child via env, never argv.
-    let seed = node::resolve_seed(seed);
 
     let mut cmd = node::build_command(&args, seed.as_deref())?;
     cmd.stdout(Stdio::piped());
@@ -50,7 +52,10 @@ fn render_event(value: &Value) {
     let event = value.get("event").and_then(Value::as_str).unwrap_or("");
     match event {
         "identity" => {
-            let id = value.get("nodeId").and_then(Value::as_str).unwrap_or("(unknown)");
+            let id = value
+                .get("nodeId")
+                .and_then(Value::as_str)
+                .unwrap_or("(unknown)");
             println!("  {} {}", "your node id:".bright_black(), id.bright_cyan());
         }
         "connect" => println!("  {}", "● connected to the mesh".green()),
@@ -62,9 +67,13 @@ fn render_event(value: &Value) {
             let from = value.get("from").and_then(Value::as_str).unwrap_or("?");
             let data = value.get("data").and_then(Value::as_str).unwrap_or("");
             println!("  {} {}", format!("{from}:").bright_magenta().bold(), data);
+            let _ = history::record("received", from, data.len(), "received");
         }
         "error" => {
-            let err = value.get("error").and_then(Value::as_str).unwrap_or("unknown error");
+            let err = value
+                .get("error")
+                .and_then(Value::as_str)
+                .unwrap_or("unknown error");
             eprintln!("  {} {}", "error:".red().bold(), err);
         }
         _ => println!("  {value}"),
